@@ -1,40 +1,49 @@
 #include <iostream>
-#include <cmath>
-#include <cstdio>
+#include <vector>
 using namespace std;
+typedef long long ll;
 
-const double th = M_PI * 60 / 180.0;
+const int MAX = 200000, SENTINEL = 2100000000;
+int L[MAX / 2 + 2], R[MAX / 2 + 2];
 
-struct Point {double x, y;};
-
-void print(Point a) {
-    printf("%.8f %.8f\n", a.x, a.y);
+ll merge(int A[], int n, int left, int mid, int right) {
+    ll cnt = 0;
+    int n1 = mid - left;
+    int n2 = right - mid;
+    for (int i = 0; i < n1; i++) L[i] = A[left + i];
+    for (int i = 0; i < n2; i++) R[i] = A[mid + i];
+    L[n1] = R[n2] = SENTINEL;
+    int i = 0, j = 0;
+    for (int k = left; k < right; k++) {
+        if (L[i] <= R[j]) {
+            A[k] = L[i++];
+        } else {
+            A[k] = R[j++];
+            cnt += n1 - i;
+        }
+    }
+    return cnt;
 }
 
-void koch(int n, Point a, Point b) {
-    if (n == 0) return;
-    Point s, t, u;
-
-    s.x = (2.0 * a.x + 1.0 * b.x) / 3.0;
-    s.y = (2.0 * a.y + 1.0 * b.y) / 3.0;
-    t.x = (1.0 * a.x + 2.0 * b.x) / 3.0;
-    t.y = (1.0 * a.y + 2.0 * b.y) / 3.0;
-    u.x = (t.x - s.x) * cos(th) - (t.y - s.y) * sin(th) + s.x;
-    u.y = (t.x - s.x) * sin(th) + (t.y - s.y) * cos(th) + s.y;
-
-    koch(n - 1, a, s); print(s);
-    koch(n - 1, s, u); print(u);
-    koch(n - 1, u, t); print(t);
-    koch(n - 1, t, b);
+ll msort(int A[], int n, int left, int right) {
+    ll res = 0;
+    if (left + 1 < right) {
+        int mid = (left + right) / 2;
+        res += msort(A, n, left, mid);
+        res += msort(A, n, mid, right);
+        res += merge(A, n, left, mid, right);
+    }
+    return res;
 }
+
 
 int main(void) {
-    int n;
+    int n, A[MAX];
+
     cin >> n;
-    Point a = {0, 0};
-    Point b = {100, 0};
-    print(a);
-    koch(n, a, b);
-    print(b);
+    for (int i = 0; i < n; i++) cin >> A[i];
+
+    cout << msort(A, n, 0, n) << endl;
+
     return 0;
 }

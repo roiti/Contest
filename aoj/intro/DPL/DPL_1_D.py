@@ -17,3 +17,4 @@ def lis(A):
 n = int(raw_input())
 a = [int(raw_input()) for i in xrange(n)]
 print lis(a)
+
