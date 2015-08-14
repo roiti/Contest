@@ -1,4 +1,6 @@
 *~
 *.out
 *.exe
+_*
 TODO/
+workspace/
