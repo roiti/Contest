@@ -1,0 +1,40 @@
+
+
+
+
+
+
+
+q
+
+end
+exit
+T = int(raw_input())
+for case in xrange(1, T+1):
+    B, N = map(int, raw_input().split())
+    M = map(int, raw_input().split())
+    l, r = 0, 10 ** 15
+    t = (l + r) / 2
+
+    for i in xrange(100):
+        n = sum(t / M[i] + 1 for i in xrange(B))
+        if 0 < N - n <= B:
+            N -= n
+            break
+        elif n > N:
+            r = t
+        else:
+            l = t
+
+        t = (l + r) / 2 if l != r else t + 1
+
+    ans = 0
+    while N:
+        for i in xrange(B):
+            if t % M[i] == 0:
+                if N == 0:
+                    ans = i + 1
+                    break
+                N -= 1
+        t += min(M[j] - t % M[j] for j in xrange(B))
+    print "Case #%d: %d"%(case, ans)
