@@ -1,22 +1,23 @@
 # -*- coding: utf-8 -*-
 import sys,math,heapq,itertools as it,fractions,re,bisect,collections as coll
 
-n = int(raw_input())
+MX = 110
+n, T = map(int, raw_input().split())
 a = map(int, raw_input().split())
+a = a * min(T, MX)
+m = len(a)
+nums = [1] * m
+for i in xrange(m - 1, -1, -1):
+    tmp = 0
+    for j in xrange(i + 1, min(m, i + 1 + 2 * n)):
+        if a[j] >= a[i]:
+            tmp = max(tmp, nums[j])
+    nums[i] += tmp
 
-hack = ans = 0
-while 1:
+if T <= MX:
+    print max(nums)
+else:
+    ans = 0
     for i in xrange(n):
-        if 0 <= a[i] <= hack:
-            hack += 1
-            a[i] = -1
-    if hack == n: break
-    ans += 1
-    for i in xrange(n - 1, -1, -1):
-        if 0 <= a[i] <= hack:
-            hack += 1
-            a[i] = -1
-            flag = True
-    if hack == n: break
-    ans += 1
-print ans
+        ans = max(ans, nums[i] + (nums[i] - nums[i + n]) * (T - MX))
+    print ans
