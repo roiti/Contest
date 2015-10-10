@@ -9,24 +9,22 @@ typedef long long ll;
 #define ALL(a) (a.begin()), (a.end())
 #define ISIN(a, x) (a.find(x) != a.end())
 
-int C, N;
-int a[105];
-int dp[100005];
-const int INF = 1000000000;
+int N, S, K;
+const ll mod = 1000000007;
+ll dp[105][20005];
 
 int main(void) {
-  // breath deeply and calm down
-  cin >> C;
-  cin >> N;
-  rep(i, N) cin >> a[i];
-  rep(i, C + 1) dp[i] = INF;
-  dp[0] = 0;
-  rep(i, C + 1)
-    rep(j, N)
-      if (i - a[j] >= 0)
-        dp[i] = min(dp[i], dp[i - a[j]] + 1);
+  cin >> N >> S >> K;
+  for (int i = 0; i < S + N; i += N) dp[1][i] = 1;
+  REP(i, 2, N + 1) {
+    int m = N + 1 - i;
+    rep(j, S + 1) {
+      if (j >= K * m) dp[i][j] = (dp[i][j] + dp[i - 1][j - K * m]) % mod;
+      if (j >= m)     dp[i][j] = (dp[i][j] + dp[i][j - m]) % mod;
+    }
+  }
 
-  cout << (dp[C] < INF ? dp[C]:-1) << endl;
+  cout << dp[N][S] << endl;
 
   return 0;
 }

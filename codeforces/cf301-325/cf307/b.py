@@ -1,52 +1,33 @@
-from collections import defaultdict
-def makeb():
-	return min(hista[k] / v for k, v in histb.items())
-
-def makec():
-	return min(hista[k] / v for k, v in histc.items())
+# -*- coding: utf-8 -*-
+import sys,copy,math,heapq,itertools as it,fractions,re,bisect,collections as coll
 
 alpha = "abcdefghijklmnopqrstuvwxyz"
 a = raw_input()
 b = raw_input()
 c = raw_input()
 
-_hista = defaultdict(int)
-histb = defaultdict(int)
-histc = defaultdict(int)
-for ai in a: _hista[ai] += 1
-for bi in b: histb[bi] += 1
-for ci in c: histc[ci] += 1
+cnta = coll.defaultdict(int)
+cntb = coll.defaultdict(int)
+cntc = coll.defaultdict(int)
 
-ans1 = ans2 = ""
-cnt1 = cnt2 = 0
+for ai in a: cnta[ai] += 1
+for bi in b: cntb[bi] += 1
+for ci in c: cntc[ci] += 1
 
-hista = _hista.copy()
-m, n = makeb(), makec()
-ans1 += b * m
-cnt1 += m
-for k, v in histb.items():
-	hista[k] -= m * v
+s = bn = cn = 0
+for bm in xrange(100000):
+    ok = True
+    for k in alpha:
+        if cnta[k] < bm * cntb[k]:
+            ok = False
+            break
+    if not ok: break
+    cm = min(max(0, (cnta[k] - bm * cntb[k]) / cntc[k]) for k in alpha if cntc[k] > 0)
+    if bm + cm > s:
+        bn, cn = bm, cm
+        s = bm + cm
 
-n = makec()
-cnt1 += n
-ans1 += c * n
-for k, v in histc.items():
-	hista[k] -= n * v
-for k, v in hista.items():
-	ans1 += k * v
-
-hista = _hista.copy()
-m, n = makeb(), makec()
-ans2 += c * n
-cnt2 += n
-for k, v in histc.items():
-	hista[k] -= n * v
-m = makeb()
-cnt2 += m
-ans2 += b * m
-for k, v in histb.items():
-	hista[k] -= m * v
-for k, v in hista.items():
-	ans2 += k * v
-
-print ans1 if cnt1 > cnt2 else ans2
+ans = b * bn + c * cn
+for c in alpha:
+    ans += c * (cnta[c] - bn * cntb[c] - cn * cntc[c])
+print ans

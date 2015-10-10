@@ -2,5 +2,6 @@
 *.out
 *.exe
 _*
+.*.swp
 TODO/
 workspace/
