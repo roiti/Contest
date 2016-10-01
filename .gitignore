@@ -3,5 +3,6 @@
 *.exe
 _*
 .*.swp
+*.sample
 TODO/
 workspace/
